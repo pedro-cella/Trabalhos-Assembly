@@ -1,0 +1,96 @@
+.data
+	.globl main
+	Telefone: 	.space 16 
+	NewLine: .asciiz "\n"
+.text
+	main:
+		li $v0, 8
+		la $a0, Telefone
+		addi $a1, $zero, 16
+		syscall
+		
+		la $s1, Telefone
+		addi $t1, $zero, 15
+		
+	Verificador:
+		lb $t2, ($s1) 
+		slti $t3, $t2, 64
+		beq $t3, $zero, Conversor
+	ProximoCaracter:
+		addi $s1, $s1, 1
+		addi $t1, $t1, -1
+		bne $t1, $zero, Verificador
+		j Exit
+		
+		
+	Conversor:
+		slti $t3, $t2, 68
+		beq $t3, 1, Caso1
+		slti $t3, $t2, 71
+		beq $t3, 1, Caso2
+		slti $t3, $t2, 74
+		beq $t3, 1, Caso3
+		slti $t3, $t2, 77
+		beq $t3, 1, Caso4
+		slti $t3, $t2, 80
+		beq $t3, 1, Caso5
+		slti $t3, $t2, 84
+		beq $t3, 1, Caso6
+		slti $t3, $t2, 87
+		beq $t3, 1, Caso7
+		slti $t3, $t2, 91
+		beq $t3, 1, Caso8
+		j ERRO
+		
+	Caso1:
+		addi $s7, $zero, 50
+		sb $s7, ($s1)
+		j ProximoCaracter
+	
+	Caso2:
+		addi $s7, $zero, 51
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	Caso3:
+		addi $s7, $zero, 52
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	Caso4:
+		addi $s7, $zero, 53
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	Caso5:
+		addi $s7, $zero, 54
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	Caso6:
+		addi $s7, $zero, 55
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	Caso7:
+		addi $s7, $zero, 56
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	Caso8:
+		addi $s7, $zero, 57
+		sb $s7, ($s1)
+		j ProximoCaracter
+		
+	ERRO:
+		j main
+		
+	Exit:
+		li $v0, 4
+		la $a0, Telefone
+		syscall
+		
+		li $v0, 10
+		syscall	
+	
+	

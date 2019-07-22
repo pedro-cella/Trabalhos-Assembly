@@ -1,0 +1,76 @@
+.data
+	.globl main
+	Gabarito: .space 80
+	Resposta: .space 80
+	NovaLinha: .asciiz "\n"
+.text
+	main:
+		#Leitura do valor
+		li $v0, 5
+		syscall
+		addi $t0,$v0, 1
+		
+		#leitura e armazenamento dos valores do Gabarito
+		li $v0, 8
+               	la $a0, Gabarito
+               	move $a1, $t0
+               	syscall
+             
+             	#Caso em que o enter sera armazenado
+              	li $v0, 8
+               	la $a0, Resposta
+               	move $a1, $t0
+               	syscall
+               	
+               	#Adicionamos 1, para que o ENTER seja contabilizado
+               	addi $t0,$v0, 1
+               	
+               	#Leitura e armazenamento dos valores da Resposta
+               	li $v0,8
+               	la $a0, Resposta
+               	move $a1, $t0
+               	syscall
+               	
+               	addi $t3, $zero, 0 #Zeramos o registrador para evitar lixo, e para podermos armazenar os valores dentro de Gabarito e Resposta
+               	addi $t6, $zero, 0 #Zerando o contador 
+               	addi $t7, $zero, 0 #Zerando o contador de termos
+               	addi $s1, $zero, 0x000000FF #Criamos uma mascara para armazenarmos e depois compararmos de valor a valor(caractee a caractere)
+		addi $s2, $zero, 0x0000000a #Criamos a condicao de parada, no caso 0x0000000a correspone ao ENTER na tabela ASCII
+        	addi $s5, $zero, 0x00000000
+        	addi $s7, $zero, 0x00000003
+        	
+        
+        While:       	
+               	lw $t2, Gabarito($t3) #Atribuimos ao registrador $t2 os caracteres, ou a string inputada anteriormente em Gabarito
+               	lw $t4, Resposta($t3) #Atribuimos ao registrador $t4 os caracteres, ou a string inputada anteriormente em Resposta
+               	addi $t3, $t3, 4 #Fazemos essa soma para quando tivermos um caso em que os valores nao caibam na primeira celulca de memoria
+               			 #Logo ao adicionarmos 4 bytes, quando a primeira celula estiver totalmente preenchida, passa-se para a segunda, onde ocorrera os mesmos loops
+        Inicio:
+        	and $s3, $t2, $s1 #Comparamos a mascara com o o valor do Gabarito para isolar o primeiro valor 
+        	and $s4, $t4, $s1 #Utilizamos da mesma mascara para isolar o primeiro valor da Resposta
+        	beq $s4, $s2, Exit #Estabelecemos uma condicao de parada, onde caso o programa detecte um ENTER, ou no caso 0x0000000a, ele vai para o label e encerra o programa
+        	beq $s4, $s5, Exit
+        	beq $s4, $s7, Exit
+        	beq $s3, $s4, Contador #Caso o programa nao tenha se encerrado, vamos para a condicao em que caso o Resposta[i] == Gabarito[i], soma 1, ou seja para contabilizarmos o numero de respostas corretas
+        Checkpoint:
+        	srl $t2, $t2, 8 #Aqui passamos para o proximo valor dentro de Gabarito
+        	srl $t4, $t4, 8 #Aqui passamos para o proximo valor dentro de Resposta
+        	addi $t7, $t7, 1 #Fazemos esse contador para controlarmos o numero de caracteres lidos
+        	beq $t7, 4, While #Caso esse caractere seja igual a 4, ou seja o maximo de caracteres que se pode ter numa celula de memoria, ele ira para o label para fazer a verificacao da proxima celulca de memoria
+        	j Inicio #Caso nenhuma das condicoes seja verdadeira voltamos ao label que fara o mesmo processo com o proximo caractere
+        Contador:
+        	addi $t6, $t6, 1 #Soma-se 1 para contar a quantidade de acertos do usuario
+        	j Checkpoint #Volta-se ao label para ler o proximo caractere
+        Exit:
+        	#Print do valor do Contador
+        	li $v0, 1 
+        	move $a0, $t6
+        	syscall
+        	
+        	#Nove Linha
+        	li $v0, 4
+        	la $a0, NovaLinha
+        	syscall
+        	
+		li $v0, 10 
+		syscall

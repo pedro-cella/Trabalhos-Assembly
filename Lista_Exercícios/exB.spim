@@ -1,0 +1,31 @@
+.data
+	.globl main
+	NewLine: .asciiz "\n"
+.text
+	main:
+		#Ler pressao desejada
+	 	li $v0, 5 #Prepara o sistema para receber um inteiro
+	 	syscall #O syscall avisa ao Kernel o que devera ser executado, "requisita um servico"
+	 	move $t0, $v0 #Nesse caso armazenamos o que foi colocado inicialmente em $v0, no registrador temporario $t0  
+	 	
+	 	#Ler pressao atual
+	 	li $v0, 5 #Prepara o sistema para receber um inteiro
+	 	syscall # O syscall avisa ao Kernel o que devera ser executado, "requisita um servico"
+	 	move $t1, $v0 #Fazemos o mesmo armazenando o que etava inicialmente em $v0, porem dessa vz armazena-se no registrador temporario $t1
+	 	
+	 	#Sutracao das pressoes
+	 	sub $t2, $t0, $t1 #Aqui faz-se uma subtracao entre $t0 e $t1, ou seja , entre seus valores armazenados nos registradores recente,
+	 			  # e armazena em $t2, o resultado dessa subtração 
+	 	
+	 	#Printa valor da diferenca de pressao
+	 	li $v0, 1 #Nesse caso avisa-se ao sistema que sera printado um valor inteiro
+	 	move $a0, $t2 #Nesse caso o $a0 é usado para printar valores, ou seja, armazenamos o resultado da subtração que estava em $t2 em $a0, 
+	 		      #para que esse valor seja mostrado
+	 	syscall
+	 	
+	 	#Nova linha
+	 	li $v0, 4 #Avisa que sera recebido um valor string
+	 	la $a0, NewLine #Acessa o endereço o qual esta armazenado o valor presente no label(que serve como uma referência) e alocamos em $a0, para que seja printado
+	 	syscall # O syscall avisa ao Kernel o que devera ser executado, "requisita um servico"
+	 	
+	

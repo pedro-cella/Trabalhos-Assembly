@@ -1,0 +1,42 @@
+.data
+	.globl main
+	NewLine: .asciiz "\n"
+.text
+	main:
+		li $v0, 5 #Avisa o sistema que um valor inteiro sera lido 
+		syscall #Tem a função de requesitar o Kernel que faça o serviço de execução
+		move $t0, $v0 #Armazena em $t0, o que foi inputado e alocado em $v0, registrador responsavel pela leitura
+		
+		addi $t1, $zero, 0 #Fazemos uma adição imediate para garantir que o registrador temporario $t1, não venha a ter nenhum lixo de memória
+		addi $t3, $zero, 0 #Soma = 0, fazmeos o mesmo para $t3
+
+		ble $t0, 50, while #Criamos um looping, em que nossa codição se baseia no valor de $t0 ser menor ou igual ao valor de 50
+		li $v0, 10 #Aqui executamos um valor de saida, no caso o valor 10 representa um Exit um encerramento na execução do programa
+						
+		while: 	
+			bge $t1, $t0, exit #Caso a condição do looping tenha sido comrpida ele é direcionado para o label
+					   # No caso dessa label ela apresenta uma outra condição(looping)
+		
+			li $v0, 5 #Avisa ao sistema sobre a leitura de um inteiro, armazenando o valor lido em $v0
+			syscall #Requisita uma execução do programa
+			move $t2, $v0 #Armazena o valor de $v0, em $t2
+			
+			bgt $t2, 5000, while #Outra condição em que se estabelece se o valor é maior que 5000
+
+			add $t3, $t3, $t2 #Faz uma soma imediata para que em $t3, armazene a soma de $t2 com $t2
+			addi $t1, $t1, 1  #i++, Armazena em $t1 uma soma de 1 em 1
+			j while #Utiliza de um jump para retornar a um label 
+			
+		exit:	
+			li $v0, 1 #Avisa o programa dobre o print de um valor inteiro
+			move $a0, $t3 #Armazena o valor de $t3 em $a0, para ser printada a resposta
+			syscall #Executa avisando o sistema para que faça a execução
+			
+			#Nova Linha
+			li $v0, 4
+			la $a0, NewLine
+			syscall
+		
+			
+		
+			

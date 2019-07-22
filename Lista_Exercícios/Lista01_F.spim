@@ -1,0 +1,110 @@
+.data
+	linha: .asciiz "\n"
+	invalido: .asciiz "Algo deu errado, tente denovo\n"
+	telefone: .space 17
+	
+#conteudo dos registradores:
+#s0: quantidade de questoes
+#s1: endereco do gabarito na memoria
+#s2: endereco da resposta do aluno na memoria
+#s3: quantidade de acertos
+
+.text
+main:
+#recebe o numero de telefone em codigo	
+	li $v0, 8					#le uma string digitada
+	la $a0, telefone			#define onde serao guardados os caracteres lidos
+	addi $a1, $0, 17			#delimita a quantidade de caracteres a serem lidos
+	syscall			          #executa a funcao
+
+	la $s0, telefone			#guarda o endereco do telefone digitado em s0
+	addi $t3, $0, 15			#coloca 15 em t3
+
+identificar:
+    lb $t2,($s0)         	     #pega o proximo caractere do telefone
+    slti $t0,$t2, 64			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 64
+    beq $t0, 0, converter		#pula para converter a letra em numero  				
+proximo: 
+    addi $s0, $s0, 1               #aponta para o proximo caracter
+    addi $t3, $t3, -1			#decrementa t4
+    bne $t3, $0, identificar		#volta para identificar o proximo caracter
+    j fim
+
+converter:
+	slti $t0, $t2, 68			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 68
+	beq $t0, 1, ABC			#se t0 for 1, salta para a correcao das letras A, B e C
+	slti $t0, $t2, 71			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 71
+	beq $t0, 1, DEF			#se t0 for 1, salta para a correcao das letras D, E e F
+	slti $t0, $t2, 74			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 74
+	beq $t0, 1, GHI			#se t0 for 1, salta para a correcao das letras G, H e I
+	slti $t0, $t2, 77			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 77
+	beq $t0, 1, JKL			#se t0 for 1, salta para a correcao das letras J, K e L
+	slti $t0, $t2, 80			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 80
+	beq $t0, 1, MNO			#se t0 for 1, salta para a correcao das letras M, N e O
+	slti $t0, $t2, 84			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 84
+	beq $t0, 1, PQRS			#se t0 for 1, salta para a correcao das letras P, Q, R e S
+	slti $t0, $t2, 87			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 87
+	beq $t0, 1, TUV			#se t0 for 1, salta para a correcao das letras T, U e V
+	slti $t0, $t2, 91			#seta t0 em 1 se o codigo ascii do caractere atual for menor do que 91
+	beq $t0, 1, WXYZ			#se t0 for 1, salta para a correcao das letras W, X, Y e Z
+	j erro
+	
+ABC:	
+	addi $t4, $0, 50			#coloca em t4 o codigo ascii para o numero 2
+ 	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+DEF:	
+	addi $t4, $0, 51			#coloca em t4 o codigo ascii para o numero 3
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+GHI:	
+	addi $t4, $0, 52			#coloca em t4 o codigo ascii para o numero 4
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+JKL:	
+	addi $t4, $0, 53			#coloca em t4 o codigo ascii para o numero 5
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+MNO:	
+	addi $t4, $0, 54			#coloca em t4 o codigo ascii para o numero 6
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+PQRS:	
+	addi $t4, $0, 55			#coloca em t4 o codigo ascii para o numero 7
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+TUV:	
+	addi $t4, $0, 56			#coloca em t4 o codigo ascii para o numero 8
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+	
+WXYZ:	
+	addi $t4, $0, 57			#coloca em t4 o codigo ascii para o numero 9
+	sb $t4, ($s0)				#armazena o valor de t4 na posicao de memoria atual
+	j proximo					#volta para analisar o proximo caracter
+
+
+fim:	
+	li $v0, 4					#funcao para exibir uma string
+	la $a0, telefone			#coloca o telefone em a0
+	syscall					#executa a funcao
+	
+	li $v0, 4                     #funcao para exibir uma mensagem
+	la $a0, linha		 	     #exibe uma quebra de linha
+	syscall                       #executa a funcao
+	
+	li $v0, 10				#funcao para finalizar o programa
+	syscall					#executa a funcao
+	
+erro:
+	li $v0, 4					#funcao para exibir uma string
+	la $a0, invalido			#mensagem de erro
+	syscall					#executa a funcao
+	
+	j main					#volta para o inicio

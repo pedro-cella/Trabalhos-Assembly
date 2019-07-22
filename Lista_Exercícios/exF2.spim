@@ -1,0 +1,81 @@
+.data
+	.globl main
+	
+	NewLine: .asciiz "\n"
+	Gabarito: .space 1001
+	Resposta: .space 1001
+	
+	
+.text
+
+	main: 
+		#Leitura do numero
+		li $v0, 5
+		syscall
+		move $t0, $v0
+		
+		#Verificador de erro
+		slt $s0, $t0, $zero
+		beq $s0, 1, Incorreto
+		slti $s0, $t0, 81
+		beq $s0, 0, Incorreto
+		
+		#Leitura do Gabartio
+		li $v0, 8
+		la $a0, Gabarito
+		addi $a1, $zero, 1000
+		syscall
+		
+		#Leitura da Resposta
+		li $v0, 8
+		la $a0, Resposta
+		addi $a1, $zero, 1000
+		syscall
+		
+		#Armazenamento do endereco nos registradores
+		la $t1, Gabarito
+		la $t3, Resposta
+		
+		add $s1, $zero, $zero#zeramos $s1 para ervir como contador de questoes certas
+		add $s2, $t0, $zero#Armazenamos o numero em $s2 para nos servir como subtrator 
+		
+	
+	Comparador:
+		lb $t2, ($t1) #A partir do endereco armazenado(ou seja o espaco), colocamos essa mamoria no registrador $t2
+		lb $t4, ($t3)#A partir do endereco armazenado(ou seja o espaco), colocamos essa mamoria no registrador $t4
+		seq $s0, $t2, $t4#Se $t2 e $t4 forem iguais, ou seja se a resposta bater com o Gabarito, $s0 recebera 1
+		add $s1, $s1, $s0#Usamos de $s1 para armazenar o numero de questoes corretas
+		addi $t1, $t1, 1 #Vamos para o proximo caractere de Gabarito, para ele ser comparado e contabilizado
+		addi $t3, $t3, 1#Vamos para o proximo caractere de Resposta, para ele ser comparado e contabilizado
+		addi $s2, $s2, -1#Decrementamos do total de questoes, para mostrar que estamos percorrendo
+		bne $s2, $zero, Comparador#Comparamos com zero, para caso isso ocorra significa que acabaram os caracteres e aogra sera printado o valor total de questoes
+		
+	Exit:
+		li $v0, 1
+		move $a0, $s1
+		syscall
+		
+		li $v0, 4
+		la $a0, NewLine
+		syscall
+		
+		li $v0, 10
+		syscall
+		
+	Incorreto:
+		j main #Caso um dado seja incorreto deve-se fazer a leitura novamente, ate ser lido um valor aceito
+		
+		
+		
+	
+	
+		 
+	
+		
+		
+		
+	
+		
+	 	
+		
+	

@@ -1,0 +1,81 @@
+.data
+	NewLine: .asciiz "\n"
+	.globl main
+	A: .asciiz "A"
+	B: .asciiz "B"
+	C: .asciiz "C"
+	D: .asciiz "D"
+	E: .asciiz "E"
+	
+	
+.text
+	main:
+		#Ler o numero
+		li $v0, 5 #Avisa o sistema sobrea  a leitura de um valor inteiro
+		syscall #Requer que o sistema faça a execução do código
+		move $t0, $v0 #Armazena o que foi lido em $t0
+		
+		addi $t1, $zero, 86 #Soma com zero para armazenar o valor 86 no registrador $t1
+		addi $t2, $zero, 85 #Soma com zero para armazenar o valor 85 no registrador $t2
+		addi $t3, $zero, 61 #Soma com zero para armazenar o valor 61 no registrador $t3
+		addi $t4, $zero, 60 #Soma com zero para armazenar o valor 60 no registrador $t4
+		addi $t5, $zero, 36 #Soma com zero para armazenar o valor 36 no registrador $t5
+		addi $t6, $zero, 35 #Soma com zero para armazenar o valor 35 no registrador $t6
+		addi $t7, $zero, 1 #Soma com zero para armazenar o valor 1 no registrador $t7
+		
+		#If Statement
+		#Nota A
+		bge $t0, $t1, PrintA #Compara se o valor é maior ou igua do que o valor armazenado no registrador
+		ble $t0, $t2, NotaB  #Compara se o valor é menor ou igua do que o valor armazenado no registrador
+	
+	PrintA:	li $v0, 4 #Avisa o sistema sobre a leitura de uma string
+		la $a0, A #Carrega em $a0, o que foi declarado na string A, para ser printado a mensagem
+		syscall	#Requer que o sistema faça a execução do código
+		
+		j Termina #Da um jump para a label Termina
+		
+		#Nota B
+	NotaB:	bge $t0, $t3, PrintB #Compara se o valor é maior ou igua do que o valor armazenado no registrador
+		ble $t0, $t4, NotaC #Compara se o valor é menor ou igua do que o valor armazenado no registrador
+		
+	PrintB: li $v0, 4 #Avisa o sistema sobre a leitura de uma string
+		la $a0, B #Carrega em $a0, o que foi declarado na string B, para ser printado a mensagem
+		syscall #Requer que o sistema faça a execução do código
+		
+		j Termina #Da um jump para a label Termina
+		
+		#Nota C
+	NotaC: 	bge $t0, $t5, PrintC #Compara se o valor é maior ou igua do que o valor armazenado no registrador
+		ble $t0, $t6, NotaD #Compara se o valor é menor ou igua do que o valor armazenado no registrador 
+	
+	PrintC: li $v0, 4 #Avisa o sistema sobre a leitura de uma string
+		la $a0, C #Carrega em $a0, o que foi declarado na string C, para ser printado a mensagem
+		syscall #Requer que o sistema faça a execução do código
+		
+		j Termina #Da um jump para a label Termina
+	
+		#Nota D
+	NotaD: 	bge $t0, $t7, PrintD #Compara se o valor é maior ou igua do que o valor armazenado no registrador
+	  	beq $t0, $zero, PrintE #Compara se o valor é igua ao valor armazenado no registrador
+	  	
+	PrintD:	li $v0, 4 #Avisa o sistema sobre a leitura de uma string
+		la $a0, D #Carrega em $a0, o que foi declarado na string D, para ser printado a mensagem
+		syscall #Requer que o sistema faça a execução do código
+		
+		j Termina #Da um jump para a label Termina
+		
+		#Nota E
+	PrintE: li $v0, 4 #Avisa o sistema sobre a leitura de uma string
+		la $a0, E #Carrega em $a0, o que foi declarado na string E, para ser printado a mensagem
+		syscall #Requer que o sistema faça a execução do código
+		
+		j Termina #Da um jump para a label Termina
+			
+ 		#Nova linha
+	Termina:li $v0, 4 #Avisa o sistema sobre a leitura de uma string
+    		la $a0, NewLine #Carrega em $a0, o que foi declarado na string NewLine, para ser printado a mensagem
+    		syscall #Requer que o sistema faça a execução do código
+		
+		
+	
+		
