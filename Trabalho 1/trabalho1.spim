@@ -1,0 +1,147 @@
+.data
+	NewLine: .asciiz "\n"
+	.globl main
+	ADD: .asciiz "ADD: " 
+	SUB: .asciiz "SUB: "
+	AND: .asciiz "AND: " 
+	OR: .asciiz "OR: "
+	XOR: .asciiz "XOR: "
+	SLL: .asciiz "SLL(3): "
+	SRL: .asciiz "SRL(1): "
+.text
+
+	main: 	
+		#Le o primeiro inteiro
+		li $v0, 5
+		syscall
+		
+		#Armazaena o valor em $t0
+		move $t0, $v0
+		
+		#Le segundo inteiro
+		li $v0, 5
+		syscall
+		
+		#Armazaena o valor em $t1
+		move $t1, $v0
+		
+		#Soma N1 e N2
+		add $t2, $t1, $t0
+		
+		#Subtrai N1 e N2
+		sub $t3, $t0, $t1
+		
+		#AND entre N1 e N2
+		and $t4, $t0, $t1
+		
+		#OR entre N1 e N2
+		or $t5, $t0, $t1
+		
+		#XOR entre N1 e N2
+		xor $t6, $t0, $t1
+		
+		#Deslocamento de 3 bits a esquerda de N1(primeiro numero)
+		sll $t7, $t0, 3
+
+		#Deslocamento de 1 bit a direita de N2(segundo numero)		
+		srl $s0, $t1, 1
+		
+		#Printar a mensagem e mostrar a soma
+		li $v0, 4
+		la $a0, ADD
+		syscall
+		
+		li $v0, 1
+		move $a0, $t2
+		syscall
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+		
+		#Printar a mensagem e mostrar a subtração
+		li $v0, 4
+		la $a0, SUB
+		syscall
+		
+		li $v0, 1
+		move $a0, $t3
+		syscall
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+    		
+    		#Printar a mensagem e o valor da AND
+    		li $v0, 4
+		la $a0, AND
+		syscall
+		
+		li $v0, 1
+		move $a0, $t4
+		syscall 
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+    		
+    		#Printar a mensagem e o valor da AND
+		li $v0, 4
+		la $a0, OR
+		syscall
+		
+		li $v0, 1
+		move $a0, $t5
+		syscall 
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+		
+		#Printar a mensagem e o valor do XOR
+		li $v0, 4
+		la $a0, XOR
+		syscall
+		
+		li $v0, 1
+		move $a0, $t6
+		syscall 
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+    		
+    		#Printar a mensagem e o valor do SLL
+		li $v0, 4
+		la $a0, SLL
+		syscall
+		
+		li $v0, 1
+		move $a0, $t7
+		syscall 
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+    		
+    		#Printar a mensagem e o valor do SLL
+		li $v0, 4
+		la $a0, SRL
+		syscall
+		
+		li $v0, 1
+		move $a0, $s0
+		syscall
+		
+		#Nova linha
+		li $v0, 4
+    		la $a0, NewLine
+    		syscall 
+    		
+		
