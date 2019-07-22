@@ -1,0 +1,64 @@
+.data
+	.globl main
+	NewLine: .asciiz "\n"
+	Invalid: .asciiz "Entrada invalida."
+	
+.text
+	main:
+	
+	# Entrada de N
+	li $v0, 5
+	syscall
+	move $t0, $v0 # Armazenando N
+	
+	addi $t1, $zero, 2
+	
+	bgt $t0, 1, Loop # if N > 1, entra no Loop
+	
+	# if N < 1 printf("Entrada invalida.\n");
+	li $v0, 4
+	la $a0, Invalid
+	syscall
+	# print do \n
+	li $v0, 4
+	la $a0, NewLine
+	syscall
+	li $v0, 10
+	syscall
+	
+	Loop:
+		blt $t0, 32768, While1
+		# if N > 32768 printf("Entrada invalida.\n");
+		li $v0, 4
+		la $a0, Invalid
+		syscall
+		# print do \n
+		li $v0, 4
+		la $a0, NewLine
+		syscall
+		li $v0, 10
+		syscall
+	
+		While1:
+			bne $t0, 1, While2
+			li $v0, 10
+			syscall
+	
+		While2:
+			div $t0, $t1
+			mfhi $t2
+			beqz $t2, Print
+			addi $t1, $t1, 1
+			j While2
+	
+		Print: 
+			div $t0, $t0, $t1
+			# printf("%d\n", i);
+			li $v0, 1
+			move $a0, $t1
+			syscall
+			# print do \n
+			li $v0, 4
+			la $a0, NewLine
+			syscall
+			j While1
